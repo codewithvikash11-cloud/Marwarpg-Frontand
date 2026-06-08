@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
-@theme inline {
+@theme {
+  --font-sans: var(--font-outfit);
+  --font-serif: var(--font-playfair);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  
+  /* Custom Royal Palette */
+  --color-royal-maroon: #7A1F1F;
+  --color-royal-gold: #D4A24C;
+  --color-royal-bg: #FFF8EE;
+  --color-royal-dark: #1E1E1E;
+  --color-accent-gold: #E8B24C;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #FFF8EE;
+  --foreground: #1E1E1E;
+  
+  --card: #FFFFFF;
+  --card-foreground: #1E1E1E;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #1E1E1E;
+  
+  --primary: #7A1F1F;
+  --primary-foreground: #FFF8EE;
+  
+  --secondary: #D4A24C;
+  --secondary-foreground: #1E1E1E;
+  
+  --muted: #f0e6d6;
+  --muted-foreground: #6b6b6b;
+  
+  --accent: #E8B24C;
+  --accent-foreground: #1E1E1E;
+  
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+
+  --border: #e6d8c3;
+  --input: #e6d8c3;
+  --ring: #7A1F1F;
+  
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: #1E1E1E;
+  --foreground: #FFF8EE;
+  
+  --card: #2a2a2a;
+  --card-foreground: #FFF8EE;
+  
+  --popover: #2a2a2a;
+  --popover-foreground: #FFF8EE;
+  
+  --primary: #D4A24C;
+  --primary-foreground: #1E1E1E;
+  
+  --secondary: #7A1F1F;
+  --secondary-foreground: #FFF8EE;
+  
+  --muted: #3a3a3a;
+  --muted-foreground: #a3a3a3;
+  
+  --accent: #E8B24C;
+  --accent-foreground: #1E1E1E;
+  
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+
+  --border: #404040;
+  --input: #404040;
+  --ring: #D4A24C;
+}
+
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--border);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
 }
