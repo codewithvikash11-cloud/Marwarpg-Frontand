@@ -1,10 +1,42 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Phone, MapPin, Mail, Send } from "lucide-react";
+import { Phone, MapPin, Mail, Send, CheckCircle } from "lucide-react";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import api from "@/config/api";
 
 export function Contact() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    mobileNumber: "",
+    email: "",
+    interestedRoomType: "Non AC Room",
+    message: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data } = await api.post('/inquiries/submit', {
+        ...formData,
+        sourcePage: window.location.pathname
+      });
+      if (data.success) {
+        setSuccess(true);
+        setFormData({ fullName: "", mobileNumber: "", email: "", interestedRoomType: "Non AC Room", message: "" });
+        setTimeout(() => setSuccess(false), 5000);
+      }
+    } catch (err) {
+      alert("Failed to submit inquiry. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 bg-background relative border-t border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,37 +111,49 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <form className="bg-card p-8 rounded-2xl shadow-lg border border-border/50" onSubmit={(e) => e.preventDefault()}>
+            <form className="bg-card p-8 rounded-2xl shadow-lg border border-border/50" onSubmit={handleSubmit}>
               <h3 className="text-2xl font-serif font-bold mb-6 text-foreground">Inquiry Form</h3>
               
+              {success && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Inquiry submitted successfully! We will contact you soon.
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-1">Name</label>
-                  <input type="text" id="name" className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="Your Name" />
+                  <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-1">Full Name *</label>
+                  <input required type="text" id="name" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="Your Name" />
                 </div>
                 
                 <div>
-                  <label htmlFor="mobile" className="block text-sm font-medium text-muted-foreground mb-1">Mobile Number</label>
-                  <input type="tel" id="mobile" className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="Your Mobile Number" />
+                  <label htmlFor="mobile" className="block text-sm font-medium text-muted-foreground mb-1">Mobile Number *</label>
+                  <input required type="tel" id="mobile" value={formData.mobileNumber} onChange={(e) => setFormData({...formData, mobileNumber: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="Your Mobile Number" />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-1">Email Address *</label>
+                  <input required type="email" id="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="Your Email Address" />
                 </div>
                 
                 <div>
                   <label htmlFor="room" className="block text-sm font-medium text-muted-foreground mb-1">Room Type Interested</label>
-                  <select id="room" className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow">
-                    <option value="non-ac">Non AC Room (₹5499)</option>
-                    <option value="ac">AC Room (₹5999)</option>
-                    <option value="tiffin">Tiffin Service Only</option>
+                  <select id="room" value={formData.interestedRoomType} onChange={(e) => setFormData({...formData, interestedRoomType: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow">
+                    <option value="Non AC Room">Non AC Room (₹5499)</option>
+                    <option value="AC Room">AC Room (₹5999)</option>
+                    <option value="Tiffin Only">Tiffin Service Only</option>
                   </select>
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-muted-foreground mb-1">Message</label>
-                  <textarea id="message" rows={4} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none" placeholder="Any specific requirements..."></textarea>
+                  <textarea id="message" rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none" placeholder="Any specific requirements..."></textarea>
                 </div>
                 
-                <Button className="w-full h-12 text-lg font-bold" type="submit">
+                <Button className="w-full h-12 text-lg font-bold" type="submit" disabled={loading}>
                   <Send className="w-5 h-5 mr-2" />
-                  Send Inquiry
+                  {loading ? "Sending..." : "Send Inquiry"}
                 </Button>
               </div>
             </form>
