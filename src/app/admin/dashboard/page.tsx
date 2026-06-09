@@ -1,17 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'next';
+import { useEffect, useState } from 'react';
 import { Users, Bed, IndianRupee, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import api from '@/config/api';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/dashboard/stats')
-      .then(res => res.json())
-      .then(data => {
+    api.get('/admin/dashboard/stats')
+      .then(({ data }) => {
         if (data.success) {
           setStats(data.data);
         }
@@ -84,7 +84,7 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-100">
                 <div>
-                  <p className="font-semibold text-red-800">{stats.openComplaints} Open Complaints</p>
+                  <p className="font-semibold text-red-800">{stats.activeComplaints} Open Complaints</p>
                   <p className="text-xs text-red-600 mt-1">Requires immediate attention</p>
                 </div>
                 <AlertCircle className="text-red-500" size={20} />

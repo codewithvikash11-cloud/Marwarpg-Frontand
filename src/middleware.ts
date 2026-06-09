@@ -8,35 +8,51 @@ const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Define protected routes prefix
+  // Protect Admin routes
   const isProtectedAdminRoute = pathname.startsWith('/admin') && !pathname.startsWith('/admin/login');
-  
-  // Protect API routes except auth and seed
   const isProtectedApiRoute = pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/auth') && !pathname.startsWith('/api/admin/seed');
+
+  // Protect Student routes
+  const isProtectedStudentRoute = pathname.startsWith('/student') && !pathname.startsWith('/student/login');
+  const isProtectedStudentApiRoute = pathname.startsWith('/api/student') && !pathname.startsWith('/api/student/auth');
 
   if (isProtectedAdminRoute || isProtectedApiRoute) {
     const token = request.cookies.get('admin_token')?.value;
 
     if (!token) {
       if (isProtectedApiRoute) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
       }
-      // Redirect to login for pages
-      const loginUrl = new URL('/admin/login', request.url);
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
     try {
-      // Verify JWT token using jose (Next.js Edge runtime compatible)
       await jwtVerify(token, SECRET);
-      return NextResponse.next();
     } catch (error) {
-      // Token is invalid or expired
       if (isProtectedApiRoute) {
-        return NextResponse.json({ message: 'Unauthorized or token expired' }, { status: 401 });
+        return NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 401 });
       }
-      const loginUrl = new URL('/admin/login', request.url);
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+  }
+
+  if (isProtectedStudentRoute || isProtectedStudentApiRoute) {
+    const token = request.cookies.get('student_token')?.value;
+
+    if (!token) {
+      if (isProtectedStudentApiRoute) {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL('/student/login', request.url));
+    }
+
+    try {
+      await jwtVerify(token, SECRET);
+    } catch (error) {
+      if (isProtectedStudentApiRoute) {
+        return NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL('/student/login', request.url));
     }
   }
 
@@ -46,6 +62,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin/:path*',
-    '/api/admin/:path*'
+    '/api/admin/:path*',
+    '/student/:path*'
   ]
 };

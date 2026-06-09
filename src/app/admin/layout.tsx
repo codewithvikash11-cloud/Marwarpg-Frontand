@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Users, Home, IndianRupee, MessageSquare, LogOut, LayoutDashboard } from 'lucide-react';
+import { Users, Home, IndianRupee, MessageSquare, LogOut, LayoutDashboard, UserPlus, ShieldAlert } from 'lucide-react';
+import api from '@/config/api';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -13,16 +14,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const handleLogout = async () => {
-    await fetch('/api/admin/auth/logout', { method: 'POST' });
+    try {
+      await api.post('/admin/logout');
+    } catch (e) {
+      console.error(e);
+    }
     router.push('/admin/login');
   };
 
   const navItems = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Admissions', href: '/admin/admissions', icon: UserPlus },
     { name: 'Students', href: '/admin/students', icon: Users },
     { name: 'Rooms', href: '/admin/rooms', icon: Home },
     { name: 'Finance', href: '/admin/finance', icon: IndianRupee },
     { name: 'Requests', href: '/admin/requests', icon: MessageSquare },
+    { name: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldAlert },
   ];
 
   return (

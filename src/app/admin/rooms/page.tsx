@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'next';
+import { useEffect, useState } from 'react';
 import { Plus, Users } from 'lucide-react';
+import api from '@/config/api';
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/rooms')
-      .then(res => res.json())
-      .then(data => {
+    api.get('/admin/rooms')
+      .then(({ data }) => {
         if (data.success) setRooms(data.data);
       })
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 
@@ -45,7 +46,7 @@ export default function RoomsPage() {
                   </span>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-amber-500">₹{room.price}</p>
+                  <p className="text-lg font-bold text-amber-500">₹{room.rent}</p>
                   <p className="text-xs text-gray-500">per month</p>
                 </div>
               </div>
@@ -53,10 +54,10 @@ export default function RoomsPage() {
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                   <span className="flex items-center"><Users size={16} className="mr-2" /> Occupancy</span>
-                  <span className="font-medium text-gray-900">{room.occupants.length} / {room.capacity}</span>
+                  <span className="font-medium text-gray-900">{room.occupiedBeds} / {room.capacity}</span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2.5">
-                  <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${(room.occupants.length / room.capacity) * 100}%` }}></div>
+                  <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${(room.occupiedBeds / room.capacity) * 100}%` }}></div>
                 </div>
               </div>
             </div>

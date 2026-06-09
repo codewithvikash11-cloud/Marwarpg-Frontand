@@ -67,9 +67,8 @@ export function Navbar() {
               className="font-bold flex items-center gap-2"
               asChild
             >
-              <Link href="tel:8107842564">
-                <PhoneCall className="w-4 h-4" />
-                Book Now
+              <Link href="/apply-now">
+                Apply For Admission
               </Link>
             </Button>
           </div>
@@ -107,7 +106,7 @@ export function Navbar() {
                 </Link>
               ))}
               <Button className="mt-8 w-64 h-14 text-lg font-bold" asChild>
-                <Link href="tel:8107842564">Book Now</Link>
+                <Link href="/apply-now">Apply For Admission</Link>
               </Button>
             </div>
           </motion.div>

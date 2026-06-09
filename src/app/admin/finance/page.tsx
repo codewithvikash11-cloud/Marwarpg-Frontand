@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'next';
+import { useEffect, useState } from 'react';
 import { IndianRupee, FileText } from 'lucide-react';
+import api from '@/config/api';
 
 export default function FinancePage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/payments')
-      .then(res => res.json())
-      .then(data => {
+    api.get('/admin/payments')
+      .then(({ data }) => {
         if (data.success) setPayments(data.data);
       })
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 
@@ -56,7 +57,7 @@ export default function FinancePage() {
                     <td className="px-6 py-4 font-semibold text-gray-900">₹{payment.amount}</td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        payment.status === 'Paid' ? 'bg-green-100 text-green-700' :
+                        payment.status === 'Success' ? 'bg-green-100 text-green-700' :
                         payment.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
                         'bg-red-100 text-red-700'
                       }`}>
@@ -64,7 +65,7 @@ export default function FinancePage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      {payment.status === 'Paid' && (
+                      {payment.status === 'Success' && (
                         <button className="text-amber-500 hover:text-amber-600 flex items-center space-x-1">
                           <FileText size={16} /> <span>View</span>
                         </button>

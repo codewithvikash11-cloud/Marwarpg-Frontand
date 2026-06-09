@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'next';
+import { useEffect, useState } from 'react';
 import { Plus, Search, MoreVertical } from 'lucide-react';
+import api from '@/config/api';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/students')
-      .then(res => res.json())
-      .then(data => {
+    api.get('/admin/students')
+      .then(({ data }) => {
         if (data.success) setStudents(data.data);
       })
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 

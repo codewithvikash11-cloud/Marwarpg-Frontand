@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'next';
+import { useEffect, useState } from 'react';
 import { Check, X } from 'lucide-react';
+import api from '@/config/api';
 
 export default function RequestsPage() {
   const [complaints, setComplaints] = useState([]);
@@ -10,12 +11,14 @@ export default function RequestsPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/admin/complaints').then(res => res.json()),
-      fetch('/api/admin/leaves').then(res => res.json())
-    ]).then(([complaintData, leaveData]) => {
-      if (complaintData.success) setComplaints(complaintData.data);
-      if (leaveData.success) setLeaves(leaveData.data);
-    }).finally(() => setLoading(false));
+      api.get('/admin/complaints'),
+      api.get('/admin/leaves')
+    ]).then(([complaintRes, leaveRes]) => {
+      if (complaintRes.data.success) setComplaints(complaintRes.data.data);
+      if (leaveRes.data.success) setLeaves(leaveRes.data.data);
+    })
+    .catch(err => console.error(err))
+    .finally(() => setLoading(false));
   }, []);
 
   return (
