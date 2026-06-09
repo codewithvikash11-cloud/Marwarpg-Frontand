@@ -99,7 +99,7 @@ export function Rooms() {
                     }`}
                     asChild
                   >
-                    <Link href="#contact">Book {room.type}</Link>
+                    <Link href="/apply-now">Book Now</Link>
                   </Button>
                 </CardFooter>
               </Card>

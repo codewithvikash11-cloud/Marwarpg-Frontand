@@ -68,7 +68,7 @@ export function Navbar() {
               asChild
             >
               <Link href="/apply-now">
-                Apply For Admission
+                Book Now
               </Link>
             </Button>
           </div>
@@ -106,7 +106,7 @@ export function Navbar() {
                 </Link>
               ))}
               <Button className="mt-8 w-64 h-14 text-lg font-bold" asChild>
-                <Link href="/apply-now">Apply For Admission</Link>
+                <Link href="/apply-now">Book Now</Link>
               </Button>
             </div>
           </motion.div>

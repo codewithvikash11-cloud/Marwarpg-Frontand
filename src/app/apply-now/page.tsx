@@ -377,6 +377,8 @@ export default function ApplyNowPage() {
                       { id: 'aadhaarBack', label: 'Aadhaar Back Image' },
                       { id: 'photo', label: 'Selfie Photo' },
                       { id: 'signature', label: 'Signature' },
+                      { id: 'collegeId', label: 'College ID (If Student)' },
+                      { id: 'panCard', label: 'PAN Card (If Working Professional)' },
                     ].map(doc => (
                       <div key={doc.id} className="relative group">
                         <label className="block text-sm mb-1 text-slate-300">{doc.label}</label>

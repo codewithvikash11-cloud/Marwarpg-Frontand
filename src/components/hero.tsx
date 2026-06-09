@@ -128,7 +128,7 @@ export function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Button size="lg" className="w-full sm:w-auto text-lg h-14 px-8 rounded-full shadow-[0_0_20px_rgba(212,162,76,0.3)] hover:shadow-[0_0_30px_rgba(212,162,76,0.5)] transition-all" asChild>
-            <Link href="/apply-now">Apply For Admission</Link>
+            <Link href="/apply-now">Book Now</Link>
           </Button>
           <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg h-14 px-8 rounded-full bg-white/5 border-white/20 text-white hover:bg-white/10 backdrop-blur-md" asChild>
             <Link href="#rooms">View Rooms</Link>

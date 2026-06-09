@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Users, Home, IndianRupee, MessageSquare, LogOut, LayoutDashboard, UserPlus, ShieldAlert } from 'lucide-react';
+import { Users, Home, IndianRupee, MessageSquare, LogOut, LayoutDashboard, UserPlus, ShieldAlert, HelpCircle } from 'lucide-react';
 import api from '@/config/api';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -24,11 +24,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-    { name: 'Admissions', href: '/admin/admissions', icon: UserPlus },
+    { name: 'Inquiries', href: '/admin/inquiries', icon: HelpCircle },
+    { name: 'Requests', href: '/admin/requests', icon: UserPlus },
+    { name: 'Complaints & Leaves', href: '/admin/complaints', icon: MessageSquare },
     { name: 'Students', href: '/admin/students', icon: Users },
     { name: 'Rooms', href: '/admin/rooms', icon: Home },
     { name: 'Finance', href: '/admin/finance', icon: IndianRupee },
-    { name: 'Requests', href: '/admin/requests', icon: MessageSquare },
     { name: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldAlert },
   ];
 

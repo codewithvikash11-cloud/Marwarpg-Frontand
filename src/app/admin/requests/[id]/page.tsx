@@ -13,6 +13,7 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   
   // Approval Form State
   const [roomId, setRoomId] = useState('');
@@ -73,7 +74,7 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
           </div>
         </div>
 
-        <Link href="/admin/admissions" className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
+        <Link href="/admin/requests" className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
           Back to Admissions
         </Link>
       </div>
@@ -83,7 +84,7 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center space-x-4 mb-6">
-        <Link href="/admin/admissions" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+        <Link href="/admin/requests" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <ArrowLeft size={20} className="text-gray-600" />
         </Link>
         <div>
@@ -108,6 +109,18 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
               <div><p className="text-gray-500 mb-1">Aadhaar No</p><p className="font-medium text-gray-900">{app.aadhaarNumber}</p></div>
               <div className="col-span-2 border-t pt-4"><p className="text-gray-500 mb-1">Parents</p><p className="font-medium text-gray-900">Father: {app.fatherName} | Mother: {app.motherName}</p></div>
               <div className="col-span-2"><p className="text-gray-500 mb-1">Permanent Address</p><p className="font-medium text-gray-900">{app.permanentAddress?.address}, {app.permanentAddress?.city}, {app.permanentAddress?.state} - {app.permanentAddress?.pincode}</p></div>
+              <div className="col-span-2"><p className="text-gray-500 mb-1">Current Address</p><p className="font-medium text-gray-900">{app.currentAddress?.address}, {app.currentAddress?.city}, {app.currentAddress?.state} - {app.currentAddress?.pincode}</p></div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-5 border-b border-gray-100 bg-gray-50/50">
+              <h3 className="font-bold text-gray-800">Education & Work Details</h3>
+            </div>
+            <div className="p-6 grid grid-cols-2 gap-y-6 gap-x-4 text-sm">
+              <div><p className="text-gray-500 mb-1">Status</p><p className="font-medium text-gray-900">{app.education?.occupationType || 'Student'}</p></div>
+              <div><p className="text-gray-500 mb-1">Institution/Company</p><p className="font-medium text-gray-900">{app.education?.collegeName || 'N/A'}</p></div>
+              <div><p className="text-gray-500 mb-1">Course/Designation</p><p className="font-medium text-gray-900">{app.education?.courseName || 'N/A'}</p></div>
             </div>
           </div>
 
@@ -128,12 +141,17 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
               <h3 className="font-bold text-gray-800">Uploaded Documents</h3>
             </div>
             <div className="p-6 grid grid-cols-2 gap-4">
-              {['aadhaarFront', 'aadhaarBack', 'photo', 'signature'].map(doc => (
+              {['aadhaarFront', 'aadhaarBack', 'photo', 'signature', 'collegeId', 'panCard'].map(doc => (
                 <div key={doc} className="border border-gray-200 rounded-lg p-2 flex flex-col items-center">
                   <p className="text-xs text-gray-500 font-medium mb-2 capitalize">{doc.replace(/([A-Z])/g, ' $1').trim()}</p>
                   {app.documents?.[doc] ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={app.documents[doc]} alt={doc} className="h-32 object-contain rounded" />
+                    <img 
+                      src={app.documents[doc]} 
+                      alt={doc} 
+                      className="h-32 object-contain rounded cursor-pointer hover:opacity-80 transition-opacity" 
+                      onClick={() => setPreviewImage(app.documents[doc])}
+                    />
                   ) : (
                     <div className="h-32 flex items-center justify-center text-gray-400 text-sm">No Image</div>
                   )}
@@ -142,6 +160,22 @@ export default function AdmissionDetailPage({ params }: { params: Promise<{ id: 
             </div>
           </div>
         </div>
+
+        {/* Image Preview Modal */}
+        {previewImage && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setPreviewImage(null)}>
+            <div className="relative max-w-4xl max-h-full">
+              <button 
+                className="absolute -top-10 right-0 text-white hover:text-gray-300"
+                onClick={() => setPreviewImage(null)}
+              >
+                <XCircle size={32} />
+              </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={previewImage} alt="Preview" className="max-w-full max-h-[80vh] object-contain rounded shadow-2xl bg-white" />
+            </div>
+          </div>
+        )}
 
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

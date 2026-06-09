@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Users, Bed, IndianRupee, AlertCircle } from 'lucide-react';
+import { Users, Bed, IndianRupee, AlertCircle, FileText, ClipboardList, CheckCircle, UserX, UserPlus, PhoneCall, Handshake, Mail } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import api from '@/config/api';
 
@@ -29,6 +29,20 @@ export default function DashboardPage() {
     { title: 'Pending Rent', value: `₹${stats.pendingRent}`, icon: AlertCircle, color: 'bg-red-500' },
   ];
 
+  const inquiryCards = [
+    { title: 'Total Inquiries', value: stats.totalInquiries || 0, icon: Mail, color: 'bg-indigo-500' },
+    { title: 'New Inquiries', value: stats.newInquiries || 0, icon: AlertCircle, color: 'bg-blue-400' },
+    { title: 'Contacted Leads', value: stats.contactedLeads || 0, icon: PhoneCall, color: 'bg-amber-400' },
+    { title: 'Converted Leads', value: stats.convertedLeads || 0, icon: Handshake, color: 'bg-green-500' },
+  ];
+
+  const admissionCards = [
+    { title: 'Total Requests', value: stats.totalAdmissionRequests || 0, icon: ClipboardList, color: 'bg-slate-500' },
+    { title: 'Pending Requests', value: stats.pendingRequests || 0, icon: UserPlus, color: 'bg-amber-500' },
+    { title: 'Approved Requests', value: stats.approvedRequests || 0, icon: CheckCircle, color: 'bg-green-500' },
+    { title: 'Rejected Requests', value: stats.rejectedRequests || 0, icon: UserX, color: 'bg-red-500' },
+  ];
+
   // Dummy chart data for UI purposes
   const revenueData = [
     { name: 'Jan', revenue: 40000 },
@@ -48,6 +62,40 @@ export default function DashboardPage() {
           const Icon = card.icon;
           return (
             <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
+              <div className={`${card.color} p-4 rounded-xl text-white`}>
+                <Icon size={24} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">{card.title}</p>
+                <h3 className="text-2xl font-bold text-gray-800">{card.value}</h3>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {inquiryCards.map((card, idx) => {
+          const Icon = card.icon;
+          return (
+            <div key={`inq-${idx}`} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
+              <div className={`${card.color} p-4 rounded-xl text-white`}>
+                <Icon size={24} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">{card.title}</p>
+                <h3 className="text-2xl font-bold text-gray-800">{card.value}</h3>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {admissionCards.map((card, idx) => {
+          const Icon = card.icon;
+          return (
+            <div key={`adm-${idx}`} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
               <div className={`${card.color} p-4 rounded-xl text-white`}>
                 <Icon size={24} />
               </div>

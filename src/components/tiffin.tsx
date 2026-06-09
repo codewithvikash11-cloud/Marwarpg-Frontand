@@ -135,7 +135,7 @@ export function Tiffin() {
                     variant={plan.premium ? "default" : "outline"}
                     asChild
                   >
-                    <Link href="#contact">Subscribe</Link>
+                    <Link href="/apply-now">Book Now</Link>
                   </Button>
                 </CardFooter>
               </Card>
